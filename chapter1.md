@@ -13,5 +13,3 @@ B. 假设速度为![](http://latex.codecogs.com/gif.latex?x)公里/小时，那�
 **练习题1.2 公司的市场部向你的客户承诺，下一个版本的软件性能将改进![](http://latex.codecogs.com/gif.latex?2\times)。这项任务被分配给你。你已经确认只有80%的系统能够被改进，那么，这部分需要被改进多少（即k取何值）才能达到整体性能目标？**
 
 假设这版本的用时为![](http://latex.codecogs.com/gif.latex?a)，那么有如下方程![](http://latex.codecogs.com/gif.latex?\\frac{a}{a\times0.2+\frac{a\times0.8}{k}}=2)，解方程得到![](http://latex.codecogs.com/gif.latex?k=\frac{8}{3}\approx2.67)
-
----
