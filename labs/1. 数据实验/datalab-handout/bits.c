@@ -143,7 +143,11 @@ NOTES:
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return 2;
+  /* 基于两个基本知识：
+   * 1. x^y = (~x&y)|(~y&x)
+   * 2. x|y = ~((~x)&(~y))
+   */
+  return ~((~((~x)&y))&(~((~y)&x)));
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -151,9 +155,10 @@ int bitXor(int x, int y) {
  *   Max ops: 4
  *   Rating: 1
  */
-int tmin(void) {
+  int tmin(void)
+  {
 
-  return 2;
+    return 2;
 
 }
 //2
