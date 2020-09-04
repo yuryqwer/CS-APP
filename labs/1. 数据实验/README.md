@@ -103,7 +103,7 @@ int类型和unsigned类型。可以使用任意的整数和无符号数常量。
 |----|----|----|----|
 |int bitXor(int x, int y)|只使用`~`和`&`实现`^`|1|14|
 |int tmin(void)|返回最小的补码|1|4|
-|int isTmax(int x)|如果是最大的补码返回1，否则返回0|1|10|
+|int isTmax(int x)|判断是否最大的补码|1|10|
 |int allOddBits(int x)|判断补码的所有奇数位是否都是1|2|12|
 |int negate(int x)|不使用负号`-`实现`-x`|2|5|
 |int isAsciiDigit(int x)|判断是否是ASCII码0到9|3|15|
@@ -132,7 +132,7 @@ int类型和unsigned类型。可以使用任意的整数和无符号数常量。
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  return ~((~((~x) & y)) & (~((~y) & x)));
+    return ~((~((~x) & y)) & (~((~y) & x)));
 }
 ```
 ### int tmin(void)
@@ -156,8 +156,34 @@ int bitXor(int x, int y) {
  */
 int tmin(void)
 {
-  int a = 1;
-  a = a << 31;
-  return a;
+    int a = 1;
+    a = a << 31;
+    return a;
+}
+```
+### int isTmax(int x)
+> 描述：如果x是最大的补码返回1，否则返回0
+>
+> 可用操作符：! ~ & ^ | +
+>
+> 最大操作符：10
+>
+> 难度：1
+ * 思路
+
+最大的补码是`0x7fffffff`，碰到判断是某个值的时候一般可以用异或这个值来解决，但是这边不允许使用移位运算来从某个小一点的值来构造大值。那么只能从x本身出发。可以发现，假如x是最大的补码，那么它加1等于最小的补码，然后用最大的补码加上最小的补码正好能得到`0xffffffff`的形式，它的每一位都是1，只有对这样的形式进行按位反运算才能得到0，然后用逻辑非将0转为1，将所有不是0的值都转为0。最后，再根据实际需要考虑是否要在上一步的结果上再加一个逻辑非运算即可。
+ * 代码
+```c
+/*
+ * isTmax - returns 1 if x is the maximum, two's complement number,
+ *     and 0 otherwise 
+ *   Legal ops: ! ~ & ^ | +
+ *   Max ops: 10
+ *   Rating: 1
+ */
+int isTmax(int x) {
+    int tmin = x + 1;
+    int negOne = tmin + x;
+    return !(~negOne);
 }
 ```

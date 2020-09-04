@@ -170,9 +170,9 @@ int tmin(void)
  *   Rating: 1
  */
 int isTmax(int x) {
-  int a = 1;
-  a = a << 31;
-  return !(x^(~a));
+  int tmin = x + 1;
+  int negOne = tmin + x;
+  return !(~negOne);
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
