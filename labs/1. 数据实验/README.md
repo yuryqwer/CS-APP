@@ -187,3 +187,33 @@ int isTmax(int x) {
     return !(~negOne);
 }
 ```
+### int allOddBits(int x)
+> 描述：判断补码的所有奇数位是否都是1，位的编号从0到31
+>
+> 示例：allOddBits(0xFFFFFFFD) = 0, allOddBits(0xAAAAAAAA) = 1
+> 
+> 可用操作符：! ~ & ^ | + << >>
+>
+> 最大操作符：12
+>
+> 难度：2
+ * 思路
+
+这边提供了移位运算，我们可以构造一个只有所有奇数位都是1，所有偶数位都是0的补码，然后让x经过转换变成这样的补码，这样做一次异或运算就可以判断结果。能够使用的最大整数是一个字节，而我们想要构造的补码形式为`0xAAAAAAAA`，所以要想办法从`0xAA`这样的数出发去构造成`0xAAAAAAAA`。
+ * 代码
+```c
+/* 
+ * allOddBits - return 1 if all odd-numbered bits in word set to 1
+ *   where bits are numbered from 0 (least significant) to 31 (most significant)
+ *   Examples allOddBits(0xFFFFFFFD) = 0, allOddBits(0xAAAAAAAA) = 1
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 12
+ *   Rating: 2
+ */
+int allOddBits(int x) {
+    int a = 0xAA;
+    int b = (a << 8) | a;
+    int c = (b << 16) | b;
+    return !((x & c) ^ c);
+}
+```
