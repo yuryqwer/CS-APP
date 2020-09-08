@@ -143,10 +143,6 @@ NOTES:
  *   Rating: 1
  */
 int bitXor(int x, int y) {
-  /* 基于两个基本知识：
-   * 1. x^y = (~x&y)|(~y&x)
-   * 2. x|y = ~((~x)&(~y))
-   */
   return ~((~((~x)&y))&(~((~y)&x)));
 }
 /* 
@@ -155,8 +151,7 @@ int bitXor(int x, int y) {
  *   Max ops: 4
  *   Rating: 1
  */
-int tmin(void)
-{
+int tmin(void) {
   int a = 1;
   a = a << 31;
   return a;
@@ -209,7 +204,12 @@ int negate(int x) {
  *   Rating: 3
  */
 int isAsciiDigit(int x) {
-  return 2;
+  int tmin = 1 << 31;
+  int upperBound = (~0x39) ^ tmin;
+  int lowerBound = (~0x30) ^ tmin;
+  int addUpper = (upperBound + x) >> 31;
+  int addLower = ~((lowerBound + x + 1) >> 31);
+  return !(addUpper | addLower);
 }
 /* 
  * conditional - same as x ? y : z 

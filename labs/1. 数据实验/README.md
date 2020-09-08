@@ -107,6 +107,7 @@ int类型和unsigned类型。可以使用任意的整数和无符号数常量。
 |int allOddBits(int x)|判断补码的所有奇数位是否都是1|2|12|
 |int negate(int x)|不使用负号`-`实现`-x`|2|5|
 |int isAsciiDigit(int x)|判断是否是ASCII码0到9|3|15|
+|int conditional(int x, int y, int z)|实现三元条件运算|3|16|
 
 ## 题解
 ### int bitXor(int x, int y)
@@ -280,5 +281,34 @@ int isAsciiDigit(int x) {
     int addUpper = (upperBound + x) >> 31;
     int addLower = ~((lowerBound + x + 1) >> 31);
     return !(addUpper | addLower);
+}
+```
+### int conditional(int x, int y, int z)
+> 描述：实现x ? y : z ，也就是x为真则返回y，否则返回z
+>
+> 示例：conditional(2,4,5) = 4
+> 
+> 可用操作符：! ~ & ^ | + << >>
+>
+> 最大操作符：16
+>
+> 难度：3
+ * 思路
+
+考虑从x出发构造全为0或者全为1的形式，这样可以通过分别将x与y，~x与z进行按位与，再把结果按位或得到y或者z。当x全为0时，(x & y) | (~x & z) = 0 | z = z；当x全为1时，(x & y) | (~x & z) = y | 0 = y。
+
+所以结果变成了当x为0时让它变为全0，当x不为0时让它变为全1的形式。用逻辑非运算可以把x变为0和1这两种特殊情况，分别取反后得到0xFFFFFFFF和0xFFFFFFFE，再加1后得到0x00000000和0xFFFFFFFF，可以转化成我们想要的形式。
+ * 代码
+```c
+/* 
+ * conditional - same as x ? y : z 
+ *   Example: conditional(2,4,5) = 4
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 16
+ *   Rating: 3
+ */
+int conditional(int x, int y, int z) {
+    x = ~(!x) + 1;
+    return (x & z) | (~x & y);
 }
 ```
