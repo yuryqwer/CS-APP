@@ -108,6 +108,7 @@ int类型和unsigned类型。可以使用任意的整数和无符号数常量。
 |int negate(int x)|不使用负号`-`实现`-x`|2|5|
 |int isAsciiDigit(int x)|判断是否是ASCII码0到9|3|15|
 |int conditional(int x, int y, int z)|实现三元条件运算|3|16|
+|int isLessOrEqual(int x, int y)|判断第一个参数小于等于第二个参数|3|24|
 
 ## 题解
 ### int bitXor(int x, int y)
@@ -297,7 +298,7 @@ int isAsciiDigit(int x) {
 
 考虑从x出发构造全为0或者全为1的形式，这样可以通过分别将x与y，~x与z进行按位与，再把结果按位或得到y或者z。当x全为0时，(x & y) | (~x & z) = 0 | z = z；当x全为1时，(x & y) | (~x & z) = y | 0 = y。
 
-所以结果变成了当x为0时让它变为全0，当x不为0时让它变为全1的形式。用逻辑非运算可以把x变为0和1这两种特殊情况，分别取反后得到0xFFFFFFFF和0xFFFFFFFE，再加1后得到0x00000000和0xFFFFFFFF，可以转化成我们想要的形式。
+所以结果变成了当x为0时让它变为全0，当x不为0时让它变为全1的形式。用逻辑非运算可以把x变为0和1这两种特殊情况，分别取反后得到`0xFFFFFFFF`和`0xFFFFFFFE`，再加1后得到`0x00000000`和`0xFFFFFFFF`，可以转化成我们想要的形式。
  * 代码
 ```c
 /* 
@@ -310,5 +311,37 @@ int isAsciiDigit(int x) {
 int conditional(int x, int y, int z) {
     x = ~(!x) + 1;
     return (x & z) | (~x & y);
+}
+```
+### int isLessOrEqual(int x, int y)
+> 描述：如果x <= y，返回1，否则返回0
+>
+> 示例：isLessOrEqual(4,5) = 1
+> 
+> 可用操作符：! ~ & ^ | + << >>
+>
+> 最大操作符：24
+>
+> 难度：3
+ * 思路
+
+可以根据两个数的符号位来分情况讨论。先考虑符号位不同的情况，这时候要想`x <= y`，那么必须`x < 0`，`y >= 0`，也就是x和y的符号位分别为1和0。再考虑符号位相同的情况，此时`x - y <= 0`，根据前面的negate函数可以转化成`x + (~y + 1) <= 0`，同时判断小于等于0不太方便，我们可以再拆分成两种情况：等于0也就是`x = y`的时候，这时候可以简单通过`x ^ y = 0`来得到；小于0的话判断`x + (~y + 1)`符号位是否为1即可。这样对三种情况的结果进行或运算即可。
+ * 代码
+```c
+/* 
+ * isLessOrEqual - if x <= y  then return 1, else return 0 
+ *   Example: isLessOrEqual(4,5) = 1.
+ *   Legal ops: ! ~ & ^ | + << >>
+ *   Max ops: 24
+ *   Rating: 3
+ */
+int isLessOrEqual(int x, int y) {
+    int x_sign = (x >> 31) & 0x1;
+    int y_sign = (y >> 31) & 0x1;
+    int xSign_eq_ySign = !(x_sign ^ y_sign);  // 判断符号位是否相同
+    int c1 = xSign_eq_ySign & (((x + ~y + 1) >> 31) & 0x1);  // 符号位相同时,x-y<0,即x+(~y+1) <0
+    int c2 = x_sign & (!y_sign)  // 符号位不同时需要x<0, y>=0
+    int c3 = !(x ^ y);  // 如果x=y返回1，否则返回0
+    return c1 | c2 | c3;
 }
 ```
